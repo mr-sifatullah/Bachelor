@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Bachelor</string>
+    <string name="cd">Image</string>
+    <string name="wait">অপেক্ষা করুন</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_navigation"
+    app:startDestination="@id/nav_splash">
+
+    <fragment
+        android:id="@+id/nav_splash"
+        android:name="com.sifat.bachelor.splash.SplashFragment"
+        android:label=""
+        tools:layout="@layout/fragment_splash" >
+
+        <action
+            android:id="@+id/action_splash_login"
+            app:destination="@id/nav_login"
+            app:popUpTo="@id/nav_splash"
+            app:popUpToInclusive="true"
+            />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_login"
+        android:name="com.sifat.bachelor.login.LoginFragment"
+        android:label=""
+        tools:layout="@layout/fragment_login"/>
+
+    <fragment
+        android:id="@+id/nav_registration"
+        android:name="com.sifat.bachelor.login.RegistrationFragment"
+        android:label=""
+        tools:layout="@layout/fragment_registration"/>
+
+    <fragment
+        android:id="@+id/home_fragment"
+        android:name="com.sifat.bachelor.home.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home"/>
+
+</navigation>

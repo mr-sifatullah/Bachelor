@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "287768381901",
+    "project_id": "bachelor-app-98790",
+    "storage_bucket": "bachelor-app-98790.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:287768381901:android:b7f84d5fadddce03ac1c84",
+        "android_client_info": {
+          "package_name": "com.sifat.bachelor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "287768381901-oldngbo6d7fsgm0mup6cg8svv8b7esc2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDx6Dx2tOkaKAqzENJ8Y-2kMg5D_IsOolY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "287768381901-oldngbo6d7fsgm0mup6cg8svv8b7esc2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

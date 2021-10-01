@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#FF018786</color>
+    <color name="colorPrimaryDark">#322E7F</color>
+    <color name="colorAccent">#E86324</color>
+
+    <color name="blue_700">#FF1976D2</color>
+    <color name="blue_500">#FF2196F3</color>
+    <color name="blue_a100">#FF82B1FF</color>
+    <color name="blue_100">#FFBBDEFB</color>
+    <color name="blue_50">#E3F2FD</color>
+
+    <color name="green">#056608</color>
+    <color name="green_100">#A0E77D</color>
+
+    <color name="gray_500">#999999</color>
+    <color name="gray_200">#4De0e0e0</color>
+
+    <color name="black_100">#FF000000</color>
+    <color name="black_80">#CC000000</color>
+    <color name="black_90">#E6000000</color>
+    <color name="black_70">#B3000000</color>
+    <color name="black_60">#99000000</color>
+    <color name="black_50">#80000000</color>
+    <color name="black_30">#4D000000</color>
+    <color name="black_25">#40000000</color>
+    <color name="black_15">#26000000</color>
+    <color name="black_10">#1A000000</color>
+
+    <color name="red">#E84545</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="ashColor">#7F95A3</color>
+
+    <color name="separator">#26000000</color>
+
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="primary">#6A7CFF</color>
+    <color name="background">#F7F7FA</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="colorText_primary">#565B65</color>
+    <color name="colorText_secondary">#9B9A9D</color>
+    <color name="colorHint">@color/black_30</color>
+    <color name="navHeader">@color/colorPrimary</color>
+    <color name="spinner_background">#12000000</color>
+</resources>
