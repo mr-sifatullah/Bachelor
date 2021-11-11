@@ -120,5 +120,12 @@ dependencies {
     implementation "io.insert-koin:koin-androidx-fragment:$koin_version"
     implementation "io.insert-koin:koin-androidx-workmanager:$koin_version"
 
-    implementation 'com.jakewharton.timber:timber:4.7.1'
+    implementation 'com.jakewharton.timber:timber:4.7.1' //koin Dependency Injection
+
+    implementation 'id.zelory:compressor:3.0.1'
+
+    implementation 'com.squareup.retrofit2:retrofit:2.8.2'
+    implementation 'com.squareup.retrofit2:converter-gson:2.8.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'
+    implementation 'com.github.haroldadmin:NetworkResponseAdapter:4.2.1'
 }

@@ -6,15 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.library.baseAdapters.BuildConfig
+import androidx.lifecycle.Observer
+import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.sifat.bachelor.R
 import com.sifat.bachelor.databinding.FragmentLoginBinding
+import com.sifat.bachelor.exhaustive
 import com.sifat.bachelor.hideKeyboard
 import com.sifat.bachelor.toast
+import org.koin.android.ext.android.inject
 
 class LoginFragment : Fragment() {
 
     private var binding: FragmentLoginBinding? = null
+    private val viewModel: LoginViewModel by inject()
 
     companion object {
         fun newInstance() : LoginFragment = LoginFragment().apply{}
@@ -40,7 +45,7 @@ class LoginFragment : Fragment() {
         }
 
         binding?.registration?.setOnClickListener {
-            findNavController().navigate(R.id.nav_registration)
+            //findNavController().navigate(R.id.nav_registration)
         }
     }
 
@@ -50,16 +55,20 @@ class LoginFragment : Fragment() {
         val password =  binding?.etLoginPassword?.text.toString().trim()
         if (userId.isEmpty() || password.isEmpty()){
             context?.toast("User আইডি অথবা পাসওয়ার্ড দিন")
+        }else{
+            viewModel.userLogin().observe(viewLifecycleOwner, Observer { model->
+                if (model.values.first().isNotEmpty() ){
+                    val list = model.values.first()
+                    context?.toast(list[0])
+                    //SessionManager.createSession(model.body)
+                    if (activity != null) {
+                        (activity as LoginActivity).goToHome()
+                    }
+                }else{
+                    context?.toast("User আইডি অথবা পাসওয়ার্ড সঠিক নয়")
+                }
+            })
         }
-        if (userId == "admin" && password == "1234"){
-            goToHomeFragment()
-        } else{
-            context?.toast("User আইডি অথবা পাসওয়ার্ড সঠিক নয়")
-        }
-    }
-
-    private fun goToHomeFragment(){
-        findNavController().navigate(R.id.home_fragment)
     }
 
     override fun onDestroyView() {
