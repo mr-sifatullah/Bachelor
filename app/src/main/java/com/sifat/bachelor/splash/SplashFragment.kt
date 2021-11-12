@@ -9,7 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.sifat.bachelor.R
+import com.sifat.bachelor.SessionManager
 import com.sifat.bachelor.databinding.FragmentSplashBinding
+import com.sifat.bachelor.login.LoginActivity
 
 class SplashFragment : Fragment() {
 
@@ -54,14 +56,13 @@ class SplashFragment : Fragment() {
     }
 
     private fun goToDestination() {
-     /*   if (SessionManager.isLogin) {
+        if (SessionManager.isLogin) {
             if (activity != null) {
                 (activity as LoginActivity).goToHome()
             }
         } else {
             findNavController().navigate(R.id.action_splash_login)
-        }*/
-        findNavController().navigate(R.id.action_splash_login)
+        }
     }
 
 }

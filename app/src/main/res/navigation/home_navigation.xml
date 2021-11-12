@@ -11,4 +11,23 @@
         android:label="Home"
         tools:layout="@layout/fragment_home"/>
 
+    <fragment
+        android:id="@+id/nav_bazar_costs"
+        android:name="com.sifat.bachelor.bazar.BazarCostsFragment"
+        android:label="Bazar"
+        tools:layout="@layout/fragment_bazar_costs"/>
+
+
+    <fragment
+        android:id="@+id/nav_home_rent"
+        android:name="com.sifat.bachelor.home_rent.HomeRentFragment"
+        android:label="Home Rent"
+        tools:layout="@layout/fragment_home_rent"/>
+
+    <fragment
+        android:id="@+id/nav_meal"
+        android:name="com.sifat.bachelor.meal.MealFragment"
+        android:label="Meal"
+        tools:layout="@layout/fragment_meal"/>
+
 </navigation>

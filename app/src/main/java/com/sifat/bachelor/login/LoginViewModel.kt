@@ -17,20 +17,21 @@ class LoginViewModel(private val repository: AppRepository): ViewModel() {
 
     private val viewState = MutableLiveData<ViewState>(ViewState.NONE)
     val message = "কোথাও কোনো সমস্যা হচ্ছে, আবার চেষ্টা করুন"
+    private val key = "AIzaSyDqJLrcRdvJjkaZMZWCvbQyC3gGnWJog4M"
 
-    fun userLogin(): LiveData<LoginResponse> {
+    fun userLogin(): LiveData<List<List<String>>> {
 
         viewState.value = ViewState.ProgressState(true)
-        val responseBody = MutableLiveData<LoginResponse>()
+        val responseBody = MutableLiveData<List<List<String>>>()
 
         viewModelScope.launch(Dispatchers.IO) {
-            val response = repository.userLogin()
+            val response = repository.userLogin(key)
             withContext(Dispatchers.Main) {
                 viewState.value = ViewState.ProgressState(false)
                 when (response) {
                     is NetworkResponse.Success -> {
                         if (response.body != null) {
-                            responseBody.value = response.body
+                            responseBody.value = response.body.values
                         }
                     }
                     is NetworkResponse.ServerError -> {

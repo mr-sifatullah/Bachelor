@@ -7,14 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.library.baseAdapters.BuildConfig
 import androidx.lifecycle.Observer
-import androidx.navigation.Navigation.findNavController
-import androidx.navigation.fragment.findNavController
-import com.sifat.bachelor.R
+import com.sifat.bachelor.SessionManager
 import com.sifat.bachelor.databinding.FragmentLoginBinding
-import com.sifat.bachelor.exhaustive
 import com.sifat.bachelor.hideKeyboard
 import com.sifat.bachelor.toast
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 
 class LoginFragment : Fragment() {
 
@@ -57,15 +55,21 @@ class LoginFragment : Fragment() {
             context?.toast("User আইডি অথবা পাসওয়ার্ড দিন")
         }else{
             viewModel.userLogin().observe(viewLifecycleOwner, Observer { model->
-                if (model.values.first().isNotEmpty() ){
-                    val list = model.values.first()
-                    context?.toast(list[0])
-                    //SessionManager.createSession(model.body)
-                    if (activity != null) {
-                        (activity as LoginActivity).goToHome()
+                var matched: Boolean = false
+                if (model.isNotEmpty() ){
+                    model.forEach { list->
+                        if (list.first() == userId && list.last() == password){
+                            SessionManager.createSession(list)
+                            matched = true
+                        }
                     }
-                }else{
-                    context?.toast("User আইডি অথবা পাসওয়ার্ড সঠিক নয়")
+                    if (matched){
+                        if (activity != null) {
+                            (activity as LoginActivity).goToHome()
+                        }
+                    }else{
+                        context?.toast("User আইডি অথবা পাসওয়ার্ড সঠিক নয়")
+                    }
                 }
             })
         }

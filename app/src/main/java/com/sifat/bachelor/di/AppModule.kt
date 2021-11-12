@@ -7,6 +7,7 @@ import com.sifat.bachelor.api.RetrofitUtils.createOkHttpClient
 import com.sifat.bachelor.api.RetrofitUtils.getGson
 import com.sifat.bachelor.api.RetrofitUtils.retrofitInstance
 import com.sifat.bachelor.home.HomeActivityViewModel
+import com.sifat.bachelor.home.HomeViewModel
 import com.sifat.bachelor.login.LoginViewModel
 import com.sifat.bachelor.repository.AppRepository
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -28,4 +29,5 @@ val appModule = module {
 
     single { HomeActivityViewModel(get()) }
     viewModel { LoginViewModel(get()) }
+    viewModel { HomeViewModel(get()) }
 }

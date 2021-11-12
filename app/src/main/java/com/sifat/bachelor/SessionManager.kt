@@ -14,7 +14,13 @@ object SessionManager {
         pref = context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
     }
 
-
+    fun createSession(model: List<String>) {
+        pref.edit {
+            putBoolean("isLogin", true)
+            putString("userId", model.first())
+            putString("username", model.last().trim())
+        }
+    }
 
     var isLogin: Boolean
         get() {
@@ -26,13 +32,13 @@ object SessionManager {
             }
         }
 
-    var userId: Int
+    var userId: String
         get() {
-            return pref.getInt("userId", 0)
+            return pref.getString("userId", "") ?: ""
         }
         set(value) {
             pref.edit {
-                putInt("userId", value)
+                putString("userId", value)
             }
         }
 
