@@ -14,12 +14,17 @@ android {
 
     defaultConfig {
         applicationId "com.sifat.bachelor"
-        minSdkVersion 16
-        targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion 21
+        targetSdkVersion 34
+        versionCode 77// play store 73
+        versionName "1.8.55" // play store 1.8.47
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+        ndk {
+            debugSymbolLevel 'SYMBOL_TABLE'
+        }
+        //buildConfigField("String", "FirebaseWebApiKey", firebaseWebApiKey)
     }
 
     signingConfigs {
