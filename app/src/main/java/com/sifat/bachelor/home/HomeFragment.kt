@@ -5,9 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.firestore.FirebaseFirestore
 import com.sifat.bachelor.R
 import com.sifat.bachelor.SessionManager
 import com.sifat.bachelor.databinding.FragmentHomeBinding
@@ -23,7 +25,9 @@ class HomeFragment : Fragment() {
     private var homeRentCosts: List<String> = listOf()
     private var mealTitleCosts: List<String> = listOf()
     private var mealCosts: List<String> = listOf()
-    private var totalBazar: Int = 0
+    var totalBazar = 0.0
+    var totalMeals = 0
+    private val firestore = FirebaseFirestore.getInstance()
 
     companion object {
         fun newInstance() : HomeFragment = HomeFragment().apply{}
@@ -41,9 +45,10 @@ class HomeFragment : Fragment() {
 
         initView()
         initClickLister()
-        fetchUserBazarCost()
-        fetchUserHomeRentCost()
-        fetchUserMealInfo()
+        calculateMealRate()
+        //fetchUserBazarCost()
+        //fetchUserHomeRentCost()
+        //fetchUserMealInfo()
 
     }
 
@@ -137,6 +142,50 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun calculateMealRate() {
+
+
+        // Fetch bazar records
+        firestore.collection("bazarRecords")
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                for (document in querySnapshot.documents) {
+                    val bazarRecord = document.toObject(BazarRecord::class.java)
+                    if (bazarRecord != null) {
+                        totalBazar += bazarRecord.bazarAmount
+                    }
+                }
+                // After fetching bazar records, fetch meal records
+                fetchMealRecords(totalBazar)
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(context, "Failed to fetch bazar records: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun fetchMealRecords(totalBazar: Double) {
+        firestore.collectionGroup("meals") // Using collectionGroup to fetch meals from all users
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                for (document in querySnapshot.documents) {
+                    val mealRecord = document.toObject(MealRecord::class.java)
+                    if (mealRecord != null) {
+                        totalMeals += (mealRecord.lunch + mealRecord.dinner)
+                    }
+                }
+                // Calculate meal rate
+                if (totalMeals > 0) {
+                    val mealRate = totalBazar / totalMeals
+                    binding?.meal?.text = String.format("Meal %.2f", mealRate)
+                } else {
+                    binding?.meal?.text = "Meal (No meals recorded)"
+                }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(context, "Failed to fetch meal records: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
@@ -144,3 +193,17 @@ class HomeFragment : Fragment() {
 
 
 }
+
+
+data class BazarRecord(
+    val date: String = "",
+    val bazarAmount: Double = 0.0,
+    val extraAmount: Double = 0.0,
+    val description: String = ""
+)
+
+data class MealRecord(
+    val lunch: Int = 0,
+    val dinner: Int = 0,
+    val isOff: Boolean = false
+)

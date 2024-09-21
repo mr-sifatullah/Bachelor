@@ -51,7 +51,7 @@ class HomeRentFragment : Fragment() {
     }
 
     private fun initClickLister(){
-        dataAdapter.initLoad(titleList, dataList)
+        //dataAdapter.initLoad(titleList, dataList)
     }
 
     override fun onDestroyView() {

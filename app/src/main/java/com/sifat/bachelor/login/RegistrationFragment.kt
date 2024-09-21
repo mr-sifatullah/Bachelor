@@ -5,13 +5,87 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.sifat.bachelor.databinding.FragmentRegistrationBinding
 import com.sifat.bachelor.hideKeyboard
 import com.sifat.bachelor.toast
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import java.util.*
 import kotlin.collections.HashMap
 
+class RegistrationFragment : Fragment() {
+
+    private lateinit var binding: FragmentRegistrationBinding
+    private lateinit var firestore: FirebaseFirestore
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentRegistrationBinding.inflate(inflater, container, false)
+        firestore = FirebaseFirestore.getInstance()
+        return binding.root
+    }
+
+    private fun registerUser(mobileNumber: String, password: String, email: String, name: String) {
+        // Fetch the current FCM token
+        Firebase.messaging.token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val fcmToken = task.result
+
+                // Create user data to store in Firestore
+                val userData = hashMapOf(
+                    "mobileNumber" to mobileNumber,
+                    "password" to password,
+                    "email" to email,
+                    "name" to name,
+                    "fcmToken" to fcmToken
+                )
+
+                // Save user data to Firestore
+                firestore.collection("users").document(mobileNumber)
+                    .set(userData)
+                    .addOnSuccessListener {
+                        Toast.makeText(context, "User registered successfully!", Toast.LENGTH_SHORT).show()
+                        findNavController().popBackStack()
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(context, "Registration failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+            } else {
+                Toast.makeText(context, "Failed to get FCM token", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    // Example of handling registration button click
+    private fun onRegisterButtonClick() {
+        val mobileNumber = binding.userMobile.text.toString()
+        val password = binding.etLoginPassword.text.toString()
+        val email = binding.userEmail.text.toString()
+        val name = binding.userName.text.toString()
+
+        if (mobileNumber.isNotEmpty() && password.isNotEmpty() && email.isNotEmpty() && name.isNotEmpty()) {
+            registerUser(mobileNumber, password, email, name)
+        } else {
+            Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.registerBtn.setOnClickListener {
+            onRegisterButtonClick()
+        }
+    }
+}
+
+
+/*
 class RegistrationFragment : Fragment() {
 
     private var binding: FragmentRegistrationBinding? = null
@@ -70,4 +144,4 @@ class RegistrationFragment : Fragment() {
         binding = null
     }
 
-}
+}*/

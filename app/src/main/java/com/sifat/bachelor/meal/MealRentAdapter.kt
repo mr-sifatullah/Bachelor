@@ -9,8 +9,7 @@ import com.sifat.bachelor.databinding.ItemViewMealBinding
 
 class MealRentAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val titleList: MutableList<String> = mutableListOf()
-    private val dataList: MutableList<String> = mutableListOf()
+    private val dataList: MutableList<Meal> = mutableListOf()
     var onItemClick: (() -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -23,13 +22,12 @@ class MealRentAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ViewModel) {
-            val title = titleList[position]
+
             val model = dataList[position]
             val binding = holder.binding
 
-
-            binding.title.text = title
-            binding.amount.text = model
+            binding.title.text = model.date
+            binding.amount.text = if (model.off) {"off"} else {"Lunch: ${model.lunch} Dinner: ${model.dinner}"}
 
         }
     }
@@ -42,11 +40,9 @@ class MealRentAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    fun initLoad(titleLists: List<String>, list: List<String>) {
+    fun initLoad(list: List<Meal>) {
         dataList.clear()
-        titleList.clear()
         dataList.addAll(list)
-        titleList.addAll(titleLists)
         notifyDataSetChanged()
     }
 }
