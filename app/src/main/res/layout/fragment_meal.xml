@@ -9,102 +9,107 @@
     android:focusable="true">
 
     <LinearLayout
-        android:id="@+id/topLayout"
+        android:id="@+id/top1Layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:padding="16dp">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <RadioGroup
-            android:id="@+id/radioGroupMealType"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/dateET"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="wrap_content"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:foregroundGravity="center"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/radioLunch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Lunch" />
-
-            <RadioButton
-                android:id="@+id/radioDinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Dinner" />
-
-            <RadioButton
-                android:id="@+id/radioOff"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Off" />
-        </RadioGroup>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Date:"
-            android:textSize="16sp" />
-
-        <EditText
-            android:id="@+id/etDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="50dp"
             android:hint="YYYY-MM-DD"
-            android:inputType="date"
-            android:focusable="false" />
+            app:endIconTint="@color/colorPrimaryDark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/dateTF"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:inputType="none"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/btnSelectDate"
+            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Select Date" />
+            android:text="Select"/>
 
-        <LinearLayout
-            android:id="@+id/mealCountLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Lunch Count:"
-                android:textSize="16sp" />
-
-            <Spinner
-                android:id="@+id/spinnerLunchCount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Dinner Count:"
-                android:textSize="16sp" />
-
-            <Spinner
-                android:id="@+id/spinnerDinnerCount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/btnRecordMeal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Record Meal" />
-
-        <Button
-            android:id="@+id/btnShowMeals"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Show Meals" />
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/topLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top1Layout"
+        android:padding="16dp">
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:hint="Lunch">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/lunchET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:hint="Dinner"
+            app:endIconTint="@color/colorAccent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnRecordMeal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:text="Record Meal"
+        app:layout_constraintTop_toBottomOf="@+id/topLayout"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <Button
+        android:id="@+id/btnShowMeals"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:text="Show Meals"
+        app:layout_constraintTop_toBottomOf="@+id/btnRecordMeal"
+        app:layout_constraintStart_toStartOf="parent"/>
 
 
     <androidx.recyclerview.widget.RecyclerView

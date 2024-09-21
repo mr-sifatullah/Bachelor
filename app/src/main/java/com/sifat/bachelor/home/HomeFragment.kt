@@ -1,6 +1,7 @@
 package com.sifat.bachelor.home
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,10 @@ import com.sifat.bachelor.SessionManager
 import com.sifat.bachelor.databinding.FragmentHomeBinding
 import com.sifat.bachelor.toast
 import org.koin.android.ext.android.inject
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class HomeFragment : Fragment() {
     private var binding: FragmentHomeBinding? = null
@@ -45,12 +50,63 @@ class HomeFragment : Fragment() {
 
         initView()
         initClickLister()
-        calculateMealRate()
+        fetchTotalMealsForCurrentAndPreviousDays(1)
+        //calculateMealRate()
         //fetchUserBazarCost()
         //fetchUserHomeRentCost()
         //fetchUserMealInfo()
 
     }
+
+    private fun fetchTotalMealsForCurrentAndPreviousDays(daysBack: Int) {
+        val calendar = Calendar.getInstance()
+        val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+
+        val currentYear = calendar.get(Calendar.YEAR)
+        val currentMonth = getCurrentMonth() // Function to get the current month dynamically
+
+        val monthPath = "${currentYear}-$currentMonth" // Format as "2024-09"
+
+        val totalMealsMap = mutableMapOf<String, Int>()
+
+        for (i in 0..daysBack) {
+            calendar.add(Calendar.DAY_OF_MONTH, -i) // Go back i days
+            val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time)
+
+            val mealsRef = firestore.collection("meals")
+                .document(monthPath)
+                .collection("totals")
+                .document(date)
+
+            mealsRef.get().addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val totalCount = document.getLong("totalMeal")?.toInt() ?: 0
+                    totalMealsMap[date] = totalCount
+                    Log.d("TotalMeals", "Total meals for $date: $totalCount")
+                } else {
+                    Log.d("TotalMeals", "No data found for $date.")
+                    totalMealsMap[date] = 0 // Store 0 if no data is found
+                }
+
+                // Check if all requests are completed
+                if (totalMealsMap.size == daysBack + 1) {
+                    // You can now use totalMealsMap for further processing
+                    Log.d("TotalMeals", "Fetched total meals: $totalMealsMap")
+                }
+            }.addOnFailureListener { e ->
+                Log.e("TotalMeals", "Error fetching meal data: ${e.message}")
+            }
+
+            calendar.add(Calendar.DAY_OF_MONTH, i) // Reset calendar to the original date
+        }
+    }
+
+    fun getCurrentMonth(): String {
+        val dateFormat = SimpleDateFormat("MMMM", Locale.getDefault())  // Formats the month name (e.g., "September")
+        return dateFormat.format(Date())  // Returns the current month as a string
+    }
+
+
 
     private fun initView(){
         binding?.userName?.text = if (SessionManager.userName.isNotEmpty()){SessionManager.userName}else{"User Name"}

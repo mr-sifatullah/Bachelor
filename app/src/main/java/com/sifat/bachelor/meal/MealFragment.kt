@@ -17,6 +17,9 @@ import com.sifat.bachelor.databinding.FragmentMealBinding
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+
 class MealFragment : Fragment() {
     private var binding: FragmentMealBinding? = null
     private lateinit var firestore: FirebaseFirestore
@@ -31,16 +34,7 @@ class MealFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        firestore = FirebaseFirestore.getInstance() // Initialize Firestore
-
-        setupMealTypeSelection()
-
-        // Set up spinners for lunch and dinner counts
-        val lunchCounts = (0..4).toList().map { it.toString() }
-        val dinnerCounts = (0..4).toList().map { it.toString() }
-
-        binding?.spinnerLunchCount?.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, lunchCounts)
-        binding?.spinnerDinnerCount?.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, dinnerCounts)
+        firestore = FirebaseFirestore.getInstance()
 
         binding?.btnSelectDate?.setOnClickListener {
             showDatePicker()
@@ -70,56 +64,38 @@ class MealFragment : Fragment() {
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
+        val currentMonthStart = calendar.clone() as Calendar
+        currentMonthStart.set(Calendar.DAY_OF_MONTH, 1)
+
+        val currentMonthEnd = calendar.clone() as Calendar
+        currentMonthEnd.set(Calendar.DAY_OF_MONTH, currentMonthEnd.getActualMaximum(Calendar.DAY_OF_MONTH)) // End of the month
+
         val datePickerDialog = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
             val formattedDate = String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
-            binding?.etDate?.setText(formattedDate)
+            binding?.dateTF?.setText(formattedDate)
         }, year, month, day)
+
+        // Set the date picker limits
+        datePickerDialog.datePicker.minDate = currentMonthStart.timeInMillis
+        datePickerDialog.datePicker.maxDate = currentMonthEnd.timeInMillis
 
         datePickerDialog.show()
     }
-
-    private fun setupMealTypeSelection() {
-        binding?.radioGroupMealType?.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
-                R.id.radioLunch, R.id.radioDinner -> {
-                    // Show dropdowns for lunch and dinner counts
-                    binding?.mealCountLayout?.visibility = View.VISIBLE
-                }
-                R.id.radioOff -> {
-                    // Hide dropdowns for meal counts
-                    binding?.mealCountLayout?.visibility = View.GONE
-                }
-            }
-        }
-    }
-
 
 
     private fun onRecordMealButtonClick() {
         val userName = SessionManager.userName
         val mobileNumber = SessionManager.userId
-        val date = binding?.etDate?.text.toString().trim()
-        val lunchCount = if (binding?.radioLunch?.isChecked == true) {
-            binding?.spinnerLunchCount?.selectedItem.toString().toInt()
-        } else 0
-        val dinnerCount = if (binding?.radioDinner?.isChecked == true) {
-            binding?.spinnerDinnerCount?.selectedItem.toString().toInt()
-        } else 0
-        val isOff = binding?.radioOff?.isChecked == true
+        val date = binding?.dateTF?.text.toString().trim()
+        val lunchCount = binding?.lunchET?.text.toString().trim().toInt()
+        val dinnerCount = binding?.lunchET?.text.toString().trim().toInt()
 
-        // Validation
         if (date.isEmpty()) {
             Toast.makeText(context, "Please select a date.", Toast.LENGTH_SHORT).show()
             return
         }
 
-        if (!binding?.radioLunch?.isChecked!! && !binding?.radioDinner?.isChecked!! && !isOff) {
-            Toast.makeText(context, "Please select at least one meal type.", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        // Call the recordMeal function with the collected data
-        recordMeal(userName, mobileNumber, date, lunchCount, dinnerCount, isOff)
+        recordMeal(userName, mobileNumber, date, lunchCount, dinnerCount)
     }
 
 
@@ -128,8 +104,7 @@ class MealFragment : Fragment() {
         mobileNumber: String,
         date: String,
         lunchCount: Int,
-        dinnerCount: Int,
-        isOff: Boolean
+        dinnerCount: Int
     ) {
         // Validate meal limits
         if (lunchCount !in 0..4 || dinnerCount !in 0..4) {
@@ -137,27 +112,28 @@ class MealFragment : Fragment() {
             return
         }
 
-        // Reference to the meal document for the specific date
-        val mealDocRef = firestore.collection("users").document(mobileNumber)
-            .collection("meals").document(date)
+        val currentMonth = getCurrentMonth()
 
-        // Check if meal data for the given date already exists
+        // Reference to the meal document for the specific user and date under the current month
+        val mealDocRef = firestore.collection("meals")
+            .document(currentMonth)
+            .collection(date)
+            .document(mobileNumber)
+
         mealDocRef.get().addOnSuccessListener { document ->
             if (document.exists()) {
                 Toast.makeText(context, "You have already submitted data for this date.", Toast.LENGTH_SHORT).show()
             } else {
-                // Create meal data with the given date
                 val mealData = hashMapOf(
-                    "name" to userName,
+                    "userName" to userName,
                     "lunch" to lunchCount,
                     "dinner" to dinnerCount,
-                    "off" to isOff,
                     "date" to date
                 )
 
-                // Store meal data in 'meals' collection under the user document for the given date
                 mealDocRef.set(mealData)
                     .addOnSuccessListener {
+                        updateTotalMealsForDate(date) // Update total meals after recording
                         Toast.makeText(context, "Meal recorded successfully!", Toast.LENGTH_SHORT).show()
                     }
                     .addOnFailureListener { e ->
@@ -169,38 +145,65 @@ class MealFragment : Fragment() {
         }
     }
 
+    fun getCurrentMonth(): String {
+        val dateFormat = SimpleDateFormat("MMMM", Locale.getDefault())  // Formats the month name (e.g., "September")
+        return dateFormat.format(Date())  // Returns the current month as a string
+    }
+
+
+    private fun updateTotalMealsForDate(date: String) {
+        val currentMonth = getCurrentMonth()
+
+        // Reference to the collection for the current month and specific date
+        val dateMealsRef = firestore.collection("meals")
+            .document(currentMonth)
+            .collection(date)
+
+        dateMealsRef.get().addOnSuccessListener { querySnapshot ->
+            var totalMeals = 0
+
+            // Sum all users' lunch and dinner counts for the date
+            for (document in querySnapshot.documents) {
+                val lunch = document.getLong("lunch") ?: 0
+                val dinner = document.getLong("dinner") ?: 0
+                totalMeals += lunch.toInt() + dinner.toInt()
+            }
+
+            // Now store the total meal count in the main meals collection
+            val totalMealsDocRef = firestore.collection("meals")
+                .document(currentMonth)
+                .collection("totals")  // A separate collection to store total meals per date
+                .document(date)
+
+            // Create or update the document for this date
+            val totalData = hashMapOf(
+                "date" to date,
+                "totalMeal" to totalMeals
+            )
+
+            totalMealsDocRef.set(totalData)
+                .addOnSuccessListener {
+                    Toast.makeText(context, "Total meals updated successfully!", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(context, "Failed to update total meals: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+        }.addOnFailureListener { e ->
+            Toast.makeText(context, "Error retrieving meals for total calculation: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
     private fun onShowMealsButtonClick() {
         val mobileNumber = SessionManager.userId
 
         if (mobileNumber.isNotEmpty()) {
-            getMealData(mobileNumber) { mealList ->
+            /*getMealData(mobileNumber) { mealList ->
                 dataAdapter.initLoad(mealList)
-            }
+            }*/
         } else {
             Toast.makeText(context, "Please enter mobile number", Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private fun getMealData(mobileNumber: String, callback: (List<Meal>) -> Unit) {
-        firestore.collection("users").document(mobileNumber)
-            .collection("meals")
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                val mealList = mutableListOf<Meal>()
-                for (document in querySnapshot.documents) {
-                    val lunch = document.getLong("lunch") ?: 0
-                    val dinner = document.getLong("dinner") ?: 0
-                    val off = document.getBoolean("off") ?: false
-                    val date = document.getString("date") ?: ""
-
-                    // Add meal data to the list
-                    mealList.add(Meal(date, lunch.toInt(), dinner.toInt(), off))
-                }
-                callback(mealList)  // Return the meal list via callback
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(context, "Failed to retrieve meal data: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
     }
 
 
