@@ -223,6 +223,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/adminLayout"
                     android:layout_width="0dp"
                     android:layout_height="200dp"
                     android:layout_marginLeft="8dp"

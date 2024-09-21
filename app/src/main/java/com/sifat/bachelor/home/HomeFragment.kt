@@ -74,6 +74,10 @@ class HomeFragment : Fragment() {
             goToMealInfo()
         }
 
+        binding?.adminLayout?.setOnClickListener {
+            findNavController().navigate(R.id.nav_admin)
+        }
+
     }
 
     private fun fetchUserBazarCost(){
