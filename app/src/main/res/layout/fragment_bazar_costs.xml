@@ -43,6 +43,7 @@
             android:id="@+id/etBazarAmount"
             android:layout_width="wrap_content"
             android:layout_weight="1"
+            android:paddingStart="10dp"
             android:layout_height="match_parent"
             android:background="@drawable/bg_spinner"
             android:hint="Bazar"
@@ -52,12 +53,14 @@
             android:textSize="14sp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
         <EditText
             android:id="@+id/etExtraAmount"
             android:layout_width="wrap_content"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_marginStart="5dp"
+            android:paddingStart="10dp"
             android:background="@drawable/bg_spinner"
             android:hint="Extra"
             android:importantForAutofill="no"
