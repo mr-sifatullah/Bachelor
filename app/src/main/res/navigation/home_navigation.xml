@@ -31,6 +31,12 @@
         tools:layout="@layout/fragment_meal"/>
 
     <fragment
+        android:id="@+id/nav_chat"
+        android:name="com.sifat.bachelor.chat.ChatFragment"
+        android:label="Chat"
+        tools:layout="@layout/fragment_chat"/>
+
+    <fragment
         android:id="@+id/nav_admin"
         android:name="com.sifat.bachelor.admin.AdminDashboardFragment"
         android:label="Meal"

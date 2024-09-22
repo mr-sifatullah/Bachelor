@@ -50,7 +50,7 @@ class HomeFragment : Fragment() {
 
         initView()
         initClickLister()
-        fetchTotalMealsForCurrentAndPreviousDays(1)
+        //fetchTotalMealsForCurrentAndPreviousDays(1)
         //calculateMealRate()
         //fetchUserBazarCost()
         //fetchUserHomeRentCost()
@@ -121,6 +121,9 @@ class HomeFragment : Fragment() {
 
         binding?.bazarCostLayout?.setOnClickListener {
             goToUserBazarCosts()
+        }
+        binding?.profileImageView?.setOnClickListener {
+            findNavController().navigate(R.id.nav_chat)
         }
         binding?.homeRentLayout?.setOnClickListener {
             goToHomeRentCosts()
