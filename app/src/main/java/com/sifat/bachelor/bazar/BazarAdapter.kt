@@ -28,6 +28,7 @@ class BazarAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             val binding = holder.binding
 
             binding.bazarAmount.text = "${model.bazarAmount}"
+            binding.extraAmount.text = if (model.extraAmount > 0) "(Ext. ${model.extraAmount})" else ""
             binding.date.text = model.date
             binding.bazarDescription.text = model.description
 

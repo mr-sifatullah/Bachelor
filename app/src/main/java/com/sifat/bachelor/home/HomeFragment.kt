@@ -122,9 +122,11 @@ class HomeFragment : Fragment() {
         binding?.bazarCostLayout?.setOnClickListener {
             goToUserBazarCosts()
         }
-        binding?.profileImageView?.setOnClickListener {
+
+        binding?.chatLayout?.setOnClickListener {
             findNavController().navigate(R.id.nav_chat)
         }
+
         binding?.homeRentLayout?.setOnClickListener {
             goToHomeRentCosts()
         }
