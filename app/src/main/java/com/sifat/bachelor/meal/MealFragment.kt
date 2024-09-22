@@ -7,13 +7,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sifat.bachelor.CustomSpinnerAdapter
 import com.sifat.bachelor.R
 import com.sifat.bachelor.SessionManager
 import com.sifat.bachelor.databinding.FragmentMealBinding
+import com.sifat.bachelor.toast
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -23,6 +26,11 @@ import java.util.Locale
 class MealFragment : Fragment() {
     private var binding: FragmentMealBinding? = null
     private lateinit var firestore: FirebaseFirestore
+
+    var selectedLunchIndex = -1
+    var selectedLunchCount = ""
+    var selectedDinnerIndex = -1
+    var selectedDinnerCount = ""
 
     private  var dataAdapter: MealRentAdapter = MealRentAdapter()
 
@@ -36,7 +44,10 @@ class MealFragment : Fragment() {
 
         firestore = FirebaseFirestore.getInstance()
 
-        binding?.btnSelectDate?.setOnClickListener {
+        setUpeLunchSpinner()
+        setUpeDinnerSpinner()
+
+        binding?.datePicker?.setOnClickListener {
             showDatePicker()
         }
         initView()
@@ -57,6 +68,48 @@ class MealFragment : Fragment() {
             }
         }
     }
+    private fun setUpeLunchSpinner() {
+
+        val pickupLunchList: MutableList<String> = mutableListOf()
+        pickupLunchList.add("Lunch")
+        pickupLunchList.add("0")
+        pickupLunchList.add("1")
+        pickupLunchList.add("2")
+        pickupLunchList.add("3")
+        pickupLunchList.add("4")
+
+        val spinnerAdapter = CustomSpinnerAdapter(requireContext(), R.layout.item_view_spinner_item, pickupLunchList)
+        binding?.spinnerLunch?.adapter = spinnerAdapter
+        binding?.spinnerLunch?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                selectedLunchIndex = position
+                selectedLunchCount = pickupLunchList[position]
+            }
+        }
+    }
+
+    private fun setUpeDinnerSpinner() {
+
+        val pickupDinnerList: MutableList<String> = mutableListOf()
+        pickupDinnerList.add("Dinner")
+        pickupDinnerList.add("0")
+        pickupDinnerList.add("1")
+        pickupDinnerList.add("2")
+        pickupDinnerList.add("3")
+        pickupDinnerList.add("4")
+
+        val spinnerAdapter = CustomSpinnerAdapter(requireContext(), R.layout.item_view_spinner_item, pickupDinnerList)
+        binding?.spinnerDinner?.adapter = spinnerAdapter
+        binding?.spinnerDinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                selectedDinnerIndex = position
+                selectedDinnerCount = pickupDinnerList[position]
+            }
+        }
+    }
+
 
     private fun showDatePicker() {
         val calendar = Calendar.getInstance()
@@ -68,12 +121,18 @@ class MealFragment : Fragment() {
         currentMonthStart.set(Calendar.DAY_OF_MONTH, 1)
 
         val currentMonthEnd = calendar.clone() as Calendar
-        currentMonthEnd.set(Calendar.DAY_OF_MONTH, currentMonthEnd.getActualMaximum(Calendar.DAY_OF_MONTH)) // End of the month
+        currentMonthEnd.set(Calendar.DAY_OF_MONTH, currentMonthEnd.getActualMaximum(Calendar.DAY_OF_MONTH))
 
         val datePickerDialog = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
-            val formattedDate = String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
-            binding?.dateTF?.setText(formattedDate)
+            val calendar = Calendar.getInstance()
+            calendar.set(selectedYear, selectedMonth, selectedDay)
+
+            val dateFormat = SimpleDateFormat("d MMM", Locale.getDefault())
+            val formattedDate = dateFormat.format(calendar.time)
+
+            binding?.datePicker?.setText(formattedDate)
         }, year, month, day)
+
 
         // Set the date picker limits
         datePickerDialog.datePicker.minDate = currentMonthStart.timeInMillis
@@ -86,16 +145,25 @@ class MealFragment : Fragment() {
     private fun onRecordMealButtonClick() {
         val userName = SessionManager.userName
         val mobileNumber = SessionManager.userId
-        val date = binding?.dateTF?.text.toString().trim()
-        val lunchCount = binding?.lunchET?.text.toString().trim().toInt()
-        val dinnerCount = binding?.lunchET?.text.toString().trim().toInt()
+        val date = binding?.datePicker?.text.toString().trim()
+
 
         if (date.isEmpty()) {
-            Toast.makeText(context, "Please select a date.", Toast.LENGTH_SHORT).show()
+            context?.toast("Please select a date.")
             return
         }
 
-        recordMeal(userName, mobileNumber, date, lunchCount, dinnerCount)
+        if (selectedLunchIndex < 1) {
+            context?.toast("Please select Lunch.")
+            return
+        }
+
+        if (selectedDinnerIndex < 1) {
+            context?.toast("Please select Dinner.")
+            return
+        }
+
+        recordMeal(userName, mobileNumber, date, selectedLunchCount.toInt(), selectedDinnerCount.toInt())
     }
 
 
@@ -106,7 +174,7 @@ class MealFragment : Fragment() {
         lunchCount: Int,
         dinnerCount: Int
     ) {
-        // Validate meal limits
+
         if (lunchCount !in 0..4 || dinnerCount !in 0..4) {
             Toast.makeText(context, "Meal count should be between 0 and 4", Toast.LENGTH_SHORT).show()
             return
@@ -114,7 +182,7 @@ class MealFragment : Fragment() {
 
         val currentMonth = getCurrentMonth()
 
-        // Reference to the meal document for the specific user and date under the current month
+
         val mealDocRef = firestore.collection("meals")
             .document(currentMonth)
             .collection(date)
@@ -133,7 +201,7 @@ class MealFragment : Fragment() {
 
                 mealDocRef.set(mealData)
                     .addOnSuccessListener {
-                        updateTotalMealsForDate(date) // Update total meals after recording
+                        updateTotalMealsForDate(date)
                         Toast.makeText(context, "Meal recorded successfully!", Toast.LENGTH_SHORT).show()
                     }
                     .addOnFailureListener { e ->
@@ -145,16 +213,15 @@ class MealFragment : Fragment() {
         }
     }
 
-    fun getCurrentMonth(): String {
-        val dateFormat = SimpleDateFormat("MMMM", Locale.getDefault())  // Formats the month name (e.g., "September")
-        return dateFormat.format(Date())  // Returns the current month as a string
+    private fun getCurrentMonth(): String {
+        val dateFormat = SimpleDateFormat("MMMM", Locale.getDefault())
+        return dateFormat.format(Date())
     }
 
 
     private fun updateTotalMealsForDate(date: String) {
         val currentMonth = getCurrentMonth()
 
-        // Reference to the collection for the current month and specific date
         val dateMealsRef = firestore.collection("meals")
             .document(currentMonth)
             .collection(date)
@@ -162,20 +229,17 @@ class MealFragment : Fragment() {
         dateMealsRef.get().addOnSuccessListener { querySnapshot ->
             var totalMeals = 0
 
-            // Sum all users' lunch and dinner counts for the date
             for (document in querySnapshot.documents) {
                 val lunch = document.getLong("lunch") ?: 0
                 val dinner = document.getLong("dinner") ?: 0
                 totalMeals += lunch.toInt() + dinner.toInt()
             }
 
-            // Now store the total meal count in the main meals collection
             val totalMealsDocRef = firestore.collection("meals")
                 .document(currentMonth)
-                .collection("totals")  // A separate collection to store total meals per date
+                .collection("totals")
                 .document(date)
 
-            // Create or update the document for this date
             val totalData = hashMapOf(
                 "date" to date,
                 "totalMeal" to totalMeals

@@ -22,4 +22,13 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+
+    <style name="custom_spinner_style" parent="Widget.AppCompat.Light.DropDownItem.Spinner">
+
+        <item name="android:paddingStart">4dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:textColor">@color/colorText_primary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
 </resources>

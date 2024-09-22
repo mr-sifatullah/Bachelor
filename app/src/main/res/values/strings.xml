@@ -4,4 +4,7 @@
     <string name="wait">অপেক্ষা করুন</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="spinner_array_collection_location">
+        <item>Select</item>
+    </string-array>
 </resources>
