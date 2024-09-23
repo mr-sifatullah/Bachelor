@@ -7,16 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.firestore.core.UserData.ParsedSetData
+import com.sifat.bachelor.DigitConverter
 import com.sifat.bachelor.SessionManager
 import com.sifat.bachelor.databinding.FragmentHomeRentBinding
 import com.sifat.bachelor.home.HomeViewModel
 import com.sifat.bachelor.meal.MealFragment
 import com.sifat.bachelor.meal.MealRentAdapter
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 
 class HomeRentFragment : Fragment() {
     private var binding: FragmentHomeRentBinding? = null
-    private  var dataAdapter: HomeRentAdapter = HomeRentAdapter()
 
     private val viewModel: HomeViewModel by inject()
 
@@ -41,31 +43,84 @@ class HomeRentFragment : Fragment() {
     }
 
     private fun initView() {
-        binding?.recycleView?.let { view ->
-            with(view) {
-                setHasFixedSize(true)
-                layoutManager = LinearLayoutManager(requireContext())
-                adapter = dataAdapter
-            }
-        }
+        viewModel.getUserHomeRentInfo().observe(viewLifecycleOwner, Observer { lists->
+            parseRentData(lists)
+        })
     }
 
     private fun initClickLister(){
-        viewModel.getUserHomeRentInfo().observe(viewLifecycleOwner, Observer { lists->
-            lists.forEach { list->
-                if (list.contains(SessionManager.userName)){
-                    dataList = list
-                }
-                if (list.contains("Name")){
-                    titleList = list
-                }
-            }
-        })
-        dataAdapter.initLoad(titleList, dataList)
+
     }
+
+
+
+
+    private fun parseRentData(values: List<List<String>>){
+        val rentList = mutableListOf<RentData>()
+
+        for (i in 1 until values.size) {
+            val row = values[i]
+            rentList.add(
+                RentData(
+                    name = row.getOrNull(0) ?: "",
+                    mobile = row.getOrNull(1) ?: "", // Mobile number is in the second column
+                    rent = row.getOrNull(2) ?: "",
+                    electricity = row.getOrNull(3),
+                    water = row.getOrNull(4),
+                    mama = row.getOrNull(5),
+                    serviceCharge = row.getOrNull(6),
+                    internet = row.getOrNull(7),
+                    gas = row.getOrNull(8),
+                    khala = row.getOrNull(9),
+                    meal = row.getOrNull(10),
+                    extra = row.getOrNull(11),
+                    others = row.getOrNull(12),
+                    total = row.getOrNull(13),
+                    paid = row.getOrNull(14),
+                    back = row.getOrNull(15),
+                    garbage = row.getOrNull(16)
+                )
+            )
+        }
+       val myData = rentList.find { it.mobile == SessionManager.userId }
+        binding?.totalAmount?.text = "${DigitConverter.toBanglaDigit(myData?.total)}৳"
+        binding?.rent?.text = "${DigitConverter.toBanglaDigit(myData?.rent)}৳"
+        binding?.water?.text = "${DigitConverter.toBanglaDigit(myData?.water)}৳"
+        binding?.gas?.text = "${DigitConverter.toBanglaDigit(myData?.gas)}৳"
+        binding?.electricity?.text = "${DigitConverter.toBanglaDigit(myData?.electricity)}৳"
+        binding?.internet?.text = "${DigitConverter.toBanglaDigit(myData?.internet)}৳"
+        binding?.mama?.text = "${DigitConverter.toBanglaDigit(myData?.mama)}৳"
+        binding?.khala?.text = "${DigitConverter.toBanglaDigit(myData?.khala)}৳"
+        binding?.extra?.text = "${DigitConverter.toBanglaDigit(myData?.extra)}৳"
+        binding?.serviceCharge?.text = "${DigitConverter.toBanglaDigit(myData?.serviceCharge)}৳"
+        binding?.meal?.text = "${DigitConverter.toBanglaDigit(myData?.meal)}৳"
+        binding?.others?.text = "${DigitConverter.toBanglaDigit(myData?.others)}৳"
+        binding?.garbege?.text = "${DigitConverter.toBanglaDigit(myData?.garbage)}৳"
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
     }
 }
+
+data class RentData(
+    val name: String,
+    val mobile: String,
+    val rent: String,
+    val electricity: String?,
+    val water: String?,
+    val mama: String?,
+    val serviceCharge: String?,
+    val internet: String?,
+    val gas: String?,
+    val khala: String?,
+    val meal: String?,
+    val extra: String?,
+    val others: String?,
+    val total: String?,
+    val paid: String?,
+    val back: String?,
+    val garbage: String?
+)

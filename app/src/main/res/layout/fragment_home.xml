@@ -8,9 +8,76 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".home.HomeFragment">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/marqueLL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFF0F9"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#AC016D"
+            android:orientation="horizontal"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="9dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="Notice"
+                android:textColor="#ffffff"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/mainPageMarquee"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawablePadding="4dp"
+            android:ellipsize="marquee"
+            android:fadingEdge="horizontal"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:paddingStart="4dp"
+            android:paddingEnd="0dp"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textColor="#AC016D"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/linearLayout"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#AC016D"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/marqueLL">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -223,10 +290,11 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/adminLayout"
+                    android:id="@+id/homeRentLayout"
                     android:layout_width="0dp"
                     android:layout_height="200dp"
-                    android:layout_marginLeft="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:layout_weight="1"
                     android:elevation="2dp"
                     app:cardCornerRadius="10dp">
@@ -238,19 +306,18 @@
                         <ImageView
                             android:layout_width="70dp"
                             android:layout_height="70dp"
-                            android:src="@drawable/ic_profile_edit"
+                            android:src="@drawable/ic_house"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
-                            android:id="@+id/rentTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="16dp"
                             android:padding="8dp"
-                            android:text="Update"
+                            android:text="Rent"
                             android:textColor="@color/colorPrimary"
                             android:textSize="20dp"
                             android:textStyle="bold"
@@ -279,12 +346,9 @@
                 app:layout_constraintTop_toBottomOf="@+id/secondRowCardViewLayout">
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/homeRentLayout"
+                    android:id="@+id/adminLayout"
                     android:layout_width="0dp"
                     android:layout_height="200dp"
-                    android:layout_marginRight="8dp"
-                    android:clickable="true"
-                    android:focusable="true"
                     android:layout_weight="1"
                     android:elevation="2dp"
                     app:cardCornerRadius="10dp">
@@ -296,18 +360,19 @@
                         <ImageView
                             android:layout_width="70dp"
                             android:layout_height="70dp"
-                            android:src="@drawable/ic_house"
+                            android:src="@drawable/ic_profile_edit"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
+                            android:id="@+id/rentTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="16dp"
                             android:padding="8dp"
-                            android:text="Rent"
+                            android:text="Update"
                             android:textColor="@color/colorPrimary"
                             android:textSize="20dp"
                             android:textStyle="bold"

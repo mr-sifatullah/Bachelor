@@ -19,13 +19,13 @@ class HomeViewModel(private val repository: AppRepository): ViewModel() {
     val message = "কোথাও কোনো সমস্যা হচ্ছে, আবার চেষ্টা করুন"
     private val key = "AIzaSyDqJLrcRdvJjkaZMZWCvbQyC3gGnWJog4M"
 
-    fun getUserBazarInfo(): LiveData<List<List<String>>> {
+    fun getUserNotice(): LiveData<List<List<String>>> {
 
         viewState.value = ViewState.ProgressState(true)
         val responseBody = MutableLiveData<List<List<String>>>()
 
         viewModelScope.launch(Dispatchers.IO) {
-            val response = repository.getUserBazarInfo(key)
+            val response = repository.getUserNotice(key)
             withContext(Dispatchers.Main) {
                 viewState.value = ViewState.ProgressState(false)
                 when (response) {

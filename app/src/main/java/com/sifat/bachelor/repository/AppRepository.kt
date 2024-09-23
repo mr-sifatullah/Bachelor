@@ -8,7 +8,7 @@ class AppRepository(
 ) {
     suspend fun userLogin(key: String) = apiInterfaceANA.userLogin(key)
 
-    suspend fun getUserBazarInfo(key: String) = apiInterfaceANA.getUserBazarInfo(key)
+    suspend fun getUserNotice(key: String) = apiInterfaceANA.getUserNotice(key)
 
     suspend fun getUserHomeRentInfo(key: String) = apiInterfaceANA.getUserHomeRentInfo(key)
 

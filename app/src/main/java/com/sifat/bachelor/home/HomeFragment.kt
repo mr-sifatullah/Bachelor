@@ -52,7 +52,7 @@ class HomeFragment : Fragment() {
         initClickLister()
         //fetchTotalMealsForCurrentAndPreviousDays(1)
         //calculateMealRate()
-        //fetchUserBazarCost()
+        fetchUserBazarCost()
         //fetchUserHomeRentCost()
         //fetchUserMealInfo()
 
@@ -110,7 +110,7 @@ class HomeFragment : Fragment() {
 
     private fun initView(){
         binding?.userName?.text = if (SessionManager.userName.isNotEmpty()){SessionManager.userName}else{"User Name"}
-        binding?.userMobile?.text = if (SessionManager.userId.isNotEmpty()){"0${SessionManager.userId}"}else{"01XXXXXXXXX"}
+        binding?.userMobile?.text = if (SessionManager.userId.isNotEmpty()){"${SessionManager.userId}"}else{"01XXXXXXXXX"}
     }
 
     private fun initClickLister(){
@@ -142,12 +142,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun fetchUserBazarCost(){
-        viewModel.getUserBazarInfo().observe(viewLifecycleOwner, Observer { lists->
-            lists.forEach { list->
-                if (list.contains(SessionManager.userName)){
-                    bazarCosts = list
-                }
-            }
+        viewModel.getUserNotice().observe(viewLifecycleOwner, Observer { lists->
+            binding?.marqueLL?.visibility = View.VISIBLE
+            binding?.mainPageMarquee?.isSelected = true
+            binding?.mainPageMarquee?.text = lists.first().first()
         })
     }
     private fun fetchUserHomeRentCost(){

@@ -19,8 +19,8 @@ interface ApiInterfaceANA {
     @GET("13cuJeC78SpkzDuz5p1ykgCdOgThcyzxlzfQJm5UiblE/values/sign_in")
     suspend fun userLogin(@Query("key") key: String): NetworkResponse<LoginResponse, ErrorResponse>
 
-    @GET("13cuJeC78SpkzDuz5p1ykgCdOgThcyzxlzfQJm5UiblE/values/bazar")
-    suspend fun getUserBazarInfo(@Query("key") key: String): NetworkResponse<LoginResponse, ErrorResponse>
+    @GET("13cuJeC78SpkzDuz5p1ykgCdOgThcyzxlzfQJm5UiblE/values/notice")
+    suspend fun getUserNotice(@Query("key") key: String): NetworkResponse<LoginResponse, ErrorResponse>
 
     @GET("13cuJeC78SpkzDuz5p1ykgCdOgThcyzxlzfQJm5UiblE/values/home_rent")
     suspend fun getUserHomeRentInfo(@Query("key") key: String): NetworkResponse<LoginResponse, ErrorResponse>

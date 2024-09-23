@@ -21,7 +21,7 @@
     <fragment
         android:id="@+id/nav_home_rent"
         android:name="com.sifat.bachelor.home_rent.HomeRentFragment"
-        android:label="Home Rent"
+        android:label="Rent Details"
         tools:layout="@layout/fragment_home_rent"/>
 
     <fragment
@@ -33,7 +33,7 @@
     <fragment
         android:id="@+id/nav_chat"
         android:name="com.sifat.bachelor.chat.ChatFragment"
-        android:label="Chat"
+        android:label="Gossip"
         tools:layout="@layout/fragment_chat"/>
 
     <fragment
