@@ -4,21 +4,6 @@
     package="com.sifat.bachelor">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
-    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
-    <uses-feature android:name="android.hardware.camera.flash" android:required="false" />
-    <uses-feature android:name="android.hardware.camera2" android:required="false" />
-    <uses-feature android:name="android.hardware.camera2.autofocus" android:required="false" />
-    <uses-feature android:name="android.hardware.camera2.flash" android:required="false" />
-    <uses-feature android:name="android.hardware.location" android:required="false" />
 
     <application
         android:name=".MainApplication"
@@ -34,7 +19,7 @@
         tools:ignore="UnusedAttribute,LockedOrientationActivity"
         tools:replace="android:allowBackup">
 
-    <activity
+        <activity
         android:name=".login.LoginActivity"
         android:screenOrientation="portrait"
         android:windowSoftInputMode="stateHidden|adjustResize"
@@ -49,6 +34,7 @@
         <activity
             android:name=".home.HomeActivity"
             android:launchMode="singleTop"
+            android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 

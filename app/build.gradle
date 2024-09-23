@@ -31,9 +31,9 @@ android {
         release
         debug {
             storeFile rootProject.file('debugKeyStore.jks')
-            storePassword '#21032016#Sj'
+            storePassword 'sifat@2024'
             keyAlias = 'key0'
-            keyPassword '#21032016#Sj'
+            keyPassword 'sifat@2024'
         }
     }
 
