@@ -29,12 +29,12 @@ android {
 
     signingConfigs {
         release
-        debug {
-            storeFile rootProject.file('debugKeyStore.jks')
-            storePassword 'sifat@2024'
-            keyAlias = 'key0'
-            keyPassword 'sifat@2024'
-        }
+//        debug {
+//            storeFile rootProject.file('debugKeyStore.jks')
+//            storePassword 'sifat@2024'
+//            keyAlias = 'key0'
+//            keyPassword 'sifat@2024'
+//        }
     }
 
     buildTypes {
@@ -101,7 +101,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.3'
     implementation 'com.google.firebase:firebase-firestore:16.0.3'
 
-    implementation 'com.google.android.play:core-ktx:1.8.1'
     implementation 'com.google.android.gms:play-services-location:18.0.0'
 
     def nav_version = "2.3.5"
@@ -118,12 +117,23 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
-    //koin Dependency Injection
+    def koin_version = '2.2.2'
+    implementation("io.insert-koin:koin-androidx-scope:$koin_version") {
+        exclude group: "androidx.work", module: "work-runtime-ktx"
+    }
+    implementation("io.insert-koin:koin-androidx-viewmodel:$koin_version") {
+        exclude group: "androidx.work", module: "work-runtime-ktx"
+    }
+    implementation("io.insert-koin:koin-androidx-fragment:$koin_version") {
+        exclude group: "androidx.work", module: "work-runtime-ktx"
+    }
+
+/*    //koin Dependency Injection
     def koin_version = '2.2.2'
     implementation "io.insert-koin:koin-androidx-scope:$koin_version"
     implementation "io.insert-koin:koin-androidx-viewmodel:$koin_version"
     implementation "io.insert-koin:koin-androidx-fragment:$koin_version"
-    implementation "io.insert-koin:koin-androidx-workmanager:$koin_version"
+    implementation "io.insert-koin:koin-androidx-workmanager:$koin_version"*/
 
     implementation 'com.jakewharton.timber:timber:4.7.1' //koin Dependency Injection
 

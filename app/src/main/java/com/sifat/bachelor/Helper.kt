@@ -73,16 +73,6 @@ fun Fragment.alert(title: CharSequence? = null, message: CharSequence? = null, s
     return dialog
 }
 
-fun Fragment.callHelplineNumber(number: String) {
-    try {
-        val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$number"))
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(intent)
-    } catch (e: Exception) {
-        requireContext().toast("Could not find an activity to place the call")
-    }
-}
-
 
 fun Activity.alert(title: CharSequence? = null, message: CharSequence? = null, showCancel: Boolean = false, positiveButtonText: String = "ঠিক আছে", negativeButtonText: String = "ক্যানসেল", listener: ((type: Int) -> Unit)? = null): AlertDialog {
 
