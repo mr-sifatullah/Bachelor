@@ -372,7 +372,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="16dp"
                             android:padding="8dp"
-                            android:text="Update"
+                            android:text="Notification"
                             android:textColor="@color/colorPrimary"
                             android:textSize="20dp"
                             android:textStyle="bold"

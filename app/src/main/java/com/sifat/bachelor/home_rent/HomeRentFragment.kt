@@ -78,12 +78,14 @@ class HomeRentFragment : Fragment() {
                     total = row.getOrNull(13),
                     paid = row.getOrNull(14),
                     back = row.getOrNull(15),
-                    garbage = row.getOrNull(16)
+                    garbage = row.getOrNull(16),
+                    month = row.getOrNull(17)
                 )
             )
         }
        val myData = rentList.find { it.mobile == SessionManager.userId }
         binding?.totalAmount?.text = "${DigitConverter.toBanglaDigit(myData?.total)}৳"
+        binding?.month?.text = "(${myData?.month})"
         binding?.rent?.text = "${DigitConverter.toBanglaDigit(myData?.rent)}৳"
         binding?.water?.text = "${DigitConverter.toBanglaDigit(myData?.water)}৳"
         binding?.gas?.text = "${DigitConverter.toBanglaDigit(myData?.gas)}৳"
@@ -122,5 +124,6 @@ data class RentData(
     val total: String?,
     val paid: String?,
     val back: String?,
-    val garbage: String?
+    val garbage: String?,
+    val month: String?
 )

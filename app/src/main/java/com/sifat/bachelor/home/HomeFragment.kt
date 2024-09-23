@@ -52,7 +52,7 @@ class HomeFragment : Fragment() {
         initClickLister()
         //fetchTotalMealsForCurrentAndPreviousDays(1)
         //calculateMealRate()
-        fetchUserBazarCost()
+        getUserNotice()
         //fetchUserHomeRentCost()
         //fetchUserMealInfo()
 
@@ -141,12 +141,17 @@ class HomeFragment : Fragment() {
 
     }
 
-    private fun fetchUserBazarCost(){
-        viewModel.getUserNotice().observe(viewLifecycleOwner, Observer { lists->
-            binding?.marqueLL?.visibility = View.VISIBLE
-            binding?.mainPageMarquee?.isSelected = true
-            binding?.mainPageMarquee?.text = lists.first().first()
+    private fun getUserNotice(){
+        viewModel.getUserNotice().observe(viewLifecycleOwner, Observer { lists ->
+            if (!lists.isNullOrEmpty() && !lists.first().isNullOrEmpty() && lists.first().first().isNotEmpty()) {
+                binding?.marqueLL?.visibility = View.VISIBLE
+                binding?.mainPageMarquee?.isSelected = true
+                binding?.mainPageMarquee?.text = lists.first().first()
+            } else {
+                binding?.marqueLL?.visibility = View.GONE
+            }
         })
+
     }
     private fun fetchUserHomeRentCost(){
         viewModel.getUserHomeRentInfo().observe(viewLifecycleOwner, Observer { lists->

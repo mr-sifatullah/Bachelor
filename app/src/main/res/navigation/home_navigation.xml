@@ -38,8 +38,8 @@
 
     <fragment
         android:id="@+id/nav_admin"
-        android:name="com.sifat.bachelor.admin.AdminDashboardFragment"
-        android:label="Meal"
-        tools:layout="@layout/fragment_admin_dashboard"/>
+        android:name="com.sifat.bachelor.notification.NotificationDashboardFragment"
+        android:label="Notification"
+        tools:layout="@layout/fragment_notification_dashboard"/>
 
 </navigation>

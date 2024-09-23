@@ -79,7 +79,7 @@
         android:layout_margin="16dp"
         android:background="@drawable/bg_edit_text"
         android:gravity="top"
-        android:hint="Purpose for the leave Ex. Family issue"
+        android:hint="Purpose for the Bazar here..."
         android:importantForAutofill="no"
         android:inputType="textMultiLine"
         android:minLines="5"
