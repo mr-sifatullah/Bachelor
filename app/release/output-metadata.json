@@ -11,9 +11,9 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 77,
-      "versionName": "1.8.55",
-      "outputFile": "Bachelor_release_v1.8.55.apk"
+      "versionCode": 1,
+      "versionName": "1",
+      "outputFile": "Bachelor_release_v1.apk"
     }
   ],
   "elementType": "File"

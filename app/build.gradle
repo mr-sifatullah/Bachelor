@@ -16,8 +16,8 @@ android {
         applicationId "com.sifat.bachelor"
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode 77// play store 73
-        versionName "1.8.55" // play store 1.8.47
+        versionCode 1// play store 0
+        versionName "1" // play store 0
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -29,12 +29,12 @@ android {
 
     signingConfigs {
         release
-//        debug {
-//            storeFile rootProject.file('debugKeyStore.jks')
-//            storePassword 'sifat@2024'
-//            keyAlias = 'key0'
-//            keyPassword 'sifat@2024'
-//        }
+        debug {
+            storeFile rootProject.file('debugKeyStore.jks')
+            storePassword 'sifat@2024'
+            keyAlias = 'key0'
+            keyPassword 'sifat@2024'
+        }
     }
 
     buildTypes {
