@@ -9,8 +9,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.sifat.bachelor.SessionManager
 import com.sifat.bachelor.databinding.FragmentBazarCostsBinding
+import com.sifat.bachelor.getCurrentMonth
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -97,7 +99,7 @@ class BazarCostsFragment : Fragment() {
         }
 
         if (extraAmount < 0) {
-            Toast.makeText(context, "Extra amount must be greater than 0", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Extra amount cannot be negative", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -106,45 +108,70 @@ class BazarCostsFragment : Fragment() {
             return
         }
 
-        // Get mobile number
         val mobileNumber = SessionManager.userId
+        val userName = SessionManager.userName
 
-        // Reference to user's bazar record collection
-        val userBazarRef = FirebaseFirestore.getInstance().collection("bazarRecords")
-            .document(mobileNumber).collection("records")
+        val userBazarRef = FirebaseFirestore.getInstance()
+            .collection("bazarRecords")
+            .document(getCurrentMonth()) // Current month (e.g., "September")
 
-        // Check if a record for the selected date already exists
-        userBazarRef.document(date).get()
-            .addOnSuccessListener { documentSnapshot ->
-                if (documentSnapshot.exists()) {
-                    // Record already exists for this date
-                    Toast.makeText(context, "Record for this date already exists.", Toast.LENGTH_SHORT).show()
+        // Create a unique document ID using mobile number and date
+        val documentId = "${mobileNumber}_$date"
+
+        // Check if the bazar record for the user on that date already exists
+        userBazarRef.get().addOnSuccessListener { documentSnapshot ->
+            if (documentSnapshot.exists()) {
+                val existingRecords = documentSnapshot.data?.keys?.toList() ?: emptyList()
+                if (existingRecords.contains(documentId)) {
+                    // Record already exists for this user on this date
+                    Toast.makeText(context, "You have already recorded your bazar for this date.", Toast.LENGTH_SHORT).show()
                 } else {
                     // Proceed to add the record as no record exists for this date
                     val bazarData = hashMapOf(
                         "date" to date,
+                        "userName" to userName,
                         "bazarAmount" to bazarAmount,
                         "extraAmount" to extraAmount,
-                        "description" to description
+                        "description" to description,
+                        "mobileNumber" to mobileNumber
                     )
 
-                    // Add the bazar data to Firestore
-                    userBazarRef.document(date).set(bazarData)
+                    // Add the bazar data to Firestore under the current month document
+                    userBazarRef.set(hashMapOf(documentId to bazarData), SetOptions.merge())
                         .addOnSuccessListener {
-                            Toast.makeText(context, "Bazar recorded successfully!", Toast.LENGTH_SHORT).show()
                             clearInputs()
+                            Toast.makeText(context, "Bazar recorded successfully!", Toast.LENGTH_SHORT).show()
                         }
                         .addOnFailureListener { e ->
                             Toast.makeText(context, "Failed to record bazar: ${e.message}", Toast.LENGTH_SHORT).show()
                         }
                 }
+            } else {
+                // If the document does not exist, create it
+                val bazarData = hashMapOf(
+                    documentId to hashMapOf(
+                        "date" to date,
+                        "userName" to userName,
+                        "bazarAmount" to bazarAmount,
+                        "extraAmount" to extraAmount,
+                        "description" to description,
+                        "mobileNumber" to mobileNumber
+                    )
+                )
+
+                userBazarRef.set(bazarData, SetOptions.merge())
+                    .addOnSuccessListener {
+                        clearInputs()
+                        Toast.makeText(context, "Bazar recorded successfully!", Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(context, "Failed to record bazar: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
             }
-            .addOnFailureListener { e ->
-                Toast.makeText(context, "Failed to check record: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+        }.addOnFailureListener { e ->
+            Toast.makeText(context, "Failed to check record: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
     }
-
-
 
 
     private fun clearInputs() {
@@ -155,25 +182,41 @@ class BazarCostsFragment : Fragment() {
     }
 
     private fun loadBazarRecords() {
-        val mobileNumber = SessionManager.userId // Replace with actual method to get user's mobile number
+        // Reference to the bazarRecords document for the current month
+        val bazarRef = FirebaseFirestore.getInstance()
+            .collection("bazarRecords")
+            .document(getCurrentMonth()) // Current month (e.g., "September")
 
-        FirebaseFirestore.getInstance().collection("bazarRecords")
-            .document(mobileNumber).collection("records") // Fetch records under the user's document
-            .get()
-            .addOnSuccessListener { documents ->
+        // Fetching the document for the current month
+        bazarRef.get().addOnSuccessListener { documentSnapshot ->
+            if (documentSnapshot.exists()) {
                 val bazarList = mutableListOf<BazarRecord>()
-                for (document in documents) {
-                    val record = document.toObject(BazarRecord::class.java)
-                    bazarList.add(record)
+                // Loop through the keys (which are the document IDs)
+                for (key in documentSnapshot.data?.keys ?: emptyList()) {
+                    val bazarData = documentSnapshot.get(key) as? Map<String, Any>
+                    if (bazarData != null && bazarData["mobileNumber"] == SessionManager.userId) {
+                        bazarList.add(
+                            BazarRecord(
+                                date = bazarData["date"] as? String ?: "",
+                                bazarAmount = (bazarData["bazarAmount"] as? Double) ?: 0.0,
+                                extraAmount = (bazarData["extraAmount"] as? Double) ?: 0.0,
+                                description = bazarData["description"] as? String ?: "",
+                                userName = bazarData["userName"] as? String ?: "",
+                                mobileNumber = bazarData["mobileNumber"] as? String ?: ""
+                            )
+                        )
+                    }
                 }
+                bazarList.sortBy { it.date }
                 // Load the data into the adapter
                 dataAdapter.initLoad(bazarList)
+            } else {
+                Toast.makeText(context, "No data found for the current month.", Toast.LENGTH_SHORT).show()
             }
-            .addOnFailureListener { e ->
-                Toast.makeText(context, "Error fetching bazar records: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+        }.addOnFailureListener { e ->
+            Toast.makeText(context, "Failed to retrieve bazar records: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
     }
-
 
 
     override fun onDestroyView() {
@@ -184,10 +227,13 @@ class BazarCostsFragment : Fragment() {
 
 data class BazarRecord(
     val date: String = "",
+    val userName: String = "",
     val bazarAmount: Double = 0.0,
     val extraAmount: Double = 0.0,
-    val description: String = ""
+    val description: String = "",
+    val mobileNumber: String = ""
 )
+
 
 
 /*class BazarManagementFragment : Fragment() {

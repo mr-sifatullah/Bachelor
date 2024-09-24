@@ -27,7 +27,8 @@ class MealRentAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             val binding = holder.binding
 
             binding.title.text = model.date
-            binding.amount.text = if (model.off) {"off"} else {"Lunch: ${model.lunch} Dinner: ${model.dinner}"}
+            binding.lunch.text = "${model.lunch}"
+            binding.dinner.text = "${model.dinner}"
 
         }
     }

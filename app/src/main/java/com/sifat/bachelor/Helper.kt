@@ -23,6 +23,15 @@ import androidx.fragment.app.Fragment
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
+
+fun getCurrentMonth(): String {
+    val dateFormat = SimpleDateFormat("MMMM", Locale.getDefault())
+    return dateFormat.format(Date())
+}
 
 fun Fragment.hideKeyboard() {
     view?.let { activity?.hideKeyboard(it) }

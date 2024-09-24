@@ -64,7 +64,7 @@
             android:background="@drawable/bg_spinner"
             android:hint="Extra"
             android:importantForAutofill="no"
-            android:inputType="none"
+            android:inputType="number"
             android:textColor="@color/black_80"
             android:textSize="14sp"
             app:layout_constraintTop_toTopOf="parent"
