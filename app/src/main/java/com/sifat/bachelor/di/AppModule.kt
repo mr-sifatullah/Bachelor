@@ -2,6 +2,7 @@ package com.sifat.bachelor.di
 
 import com.sifat.bachelor.AppConstant
 import com.sifat.bachelor.api.ApiInterfaceANA
+import com.sifat.bachelor.api.ApiInterfacePush
 import com.sifat.bachelor.api.RetrofitUtils.createCache
 import com.sifat.bachelor.api.RetrofitUtils.createOkHttpClient
 import com.sifat.bachelor.api.RetrofitUtils.getGson
@@ -22,10 +23,12 @@ val appModule = module {
     single(named("normal")) { createOkHttpClient(get()) }
 
     single(named("api")) { retrofitInstance(AppConstant.BASE_URL, get(), get()) }
+    single(named("push")) { retrofitInstance(AppConstant.BASE_URL_PUSH, get(), get()) }
 
     single { ApiInterfaceANA(get(named("api"))) }
+    single { ApiInterfacePush(get(named("push"))) }
 
-    single { AppRepository(get()) }
+    single { AppRepository(get(), get()) }
 
     single { HomeActivityViewModel(get()) }
     viewModel { LoginViewModel(get()) }

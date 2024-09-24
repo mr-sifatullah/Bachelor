@@ -6,12 +6,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sifat.bachelor.SessionManager
+import com.sifat.bachelor.api.model.Message
+import com.sifat.bachelor.api.model.NotificationData
+import com.sifat.bachelor.api.model.Notifications
 import com.sifat.bachelor.databinding.FragmentChatBinding
+import com.sifat.bachelor.home.HomeViewModel
 import com.sifat.bachelor.toast
+import org.koin.android.ext.android.inject
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -23,6 +30,8 @@ class ChatFragment : Fragment() {
     private val messageList = mutableListOf<ChatMessage>()
     private val firestore = FirebaseFirestore.getInstance()
     private val chatCollectionRef = firestore.collection("chats")
+
+    private val viewModel: HomeViewModel by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -87,11 +96,30 @@ class ChatFragment : Fragment() {
         // Add message to Firestore
         chatCollectionRef.add(chatMessage)
             .addOnSuccessListener {
+                sendNotifications(message)
                 Log.d(TAG, "Message sent successfully.")
             }
             .addOnFailureListener { e ->
                 Log.w(TAG, "Error sending message: ", e)
             }
+    }
+
+    private fun sendNotifications(message: String) {
+
+        val multiCastRequest = NotificationData(
+            message = Message(
+                topic = "Bachelor",
+                notification = Notifications(
+                    title = message,
+                    body = "${SessionManager.userName},  ${getCurrentTime()}"
+                ),
+                data = mapOf("51A10" to "Home")
+            )
+        )
+
+        viewModel.sentPush(multiCastRequest).observe(viewLifecycleOwner, Observer { response ->
+
+        })
     }
 
 

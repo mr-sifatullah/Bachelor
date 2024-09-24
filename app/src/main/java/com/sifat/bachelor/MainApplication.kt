@@ -30,6 +30,16 @@ class MainApplication: Application() {
                 Timber.d("FirebaseToken:\n$token")
             }
         }
+
+        FirebaseMessaging.getInstance().subscribeToTopic("Bachelor")
+            .addOnCompleteListener { task ->
+                var msg = "Subscribed to topic"
+                if (!task.isSuccessful) {
+                    msg = "Subscription failed"
+                }
+                Timber.d(msg)
+            }
+
         SessionManager.deviceId = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
     }
 }
