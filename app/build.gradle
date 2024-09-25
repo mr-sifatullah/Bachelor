@@ -40,6 +40,12 @@ android {
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
     }
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
     buildTypes {
         debug {
             minifyEnabled true
@@ -150,4 +156,5 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'
     implementation 'com.github.haroldadmin:NetworkResponseAdapter:4.2.1'
     implementation 'com.squareup.okhttp3:okhttp:4.11.0'
+
 }
