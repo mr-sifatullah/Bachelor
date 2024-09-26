@@ -51,4 +51,6 @@
     <color name="colorHint">@color/black_30</color>
     <color name="navHeader">@color/colorPrimary</color>
     <color name="spinner_background">#12000000</color>
+
+    <color name="home_rent_text_color">#ffffff</color>
 </resources>

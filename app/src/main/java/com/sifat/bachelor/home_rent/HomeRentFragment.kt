@@ -43,6 +43,7 @@ class HomeRentFragment : Fragment() {
     }
 
     private fun initView() {
+        binding?.progressBar?.visibility = View.VISIBLE
         viewModel.getUserHomeRentInfo().observe(viewLifecycleOwner, Observer { lists->
             parseRentData(lists)
         })
@@ -56,6 +57,7 @@ class HomeRentFragment : Fragment() {
 
 
     private fun parseRentData(values: List<List<String>>){
+
         val rentList = mutableListOf<RentData>()
 
         for (i in 1 until values.size) {
@@ -84,20 +86,24 @@ class HomeRentFragment : Fragment() {
             )
         }
        val myData = rentList.find { it.mobile == SessionManager.userId }
-        binding?.totalAmount?.text = "${DigitConverter.toBanglaDigit(myData?.total)}৳"
+        binding?.totalAmount?.text = DigitConverter.toBanglaDigit(myData?.total)
         binding?.month?.text = "(${myData?.month})"
-        binding?.rent?.text = "${DigitConverter.toBanglaDigit(myData?.rent)}৳"
-        binding?.water?.text = "${DigitConverter.toBanglaDigit(myData?.water)}৳"
-        binding?.gas?.text = "${DigitConverter.toBanglaDigit(myData?.gas)}৳"
-        binding?.electricity?.text = "${DigitConverter.toBanglaDigit(myData?.electricity)}৳"
-        binding?.internet?.text = "${DigitConverter.toBanglaDigit(myData?.internet)}৳"
-        binding?.mama?.text = "${DigitConverter.toBanglaDigit(myData?.mama)}৳"
-        binding?.khala?.text = "${DigitConverter.toBanglaDigit(myData?.khala)}৳"
-        binding?.extra?.text = "${DigitConverter.toBanglaDigit(myData?.extra)}৳"
-        binding?.serviceCharge?.text = "${DigitConverter.toBanglaDigit(myData?.serviceCharge)}৳"
-        binding?.meal?.text = "${DigitConverter.toBanglaDigit(myData?.meal)}৳"
-        binding?.others?.text = "${DigitConverter.toBanglaDigit(myData?.others)}৳"
-        binding?.garbege?.text = "${DigitConverter.toBanglaDigit(myData?.garbage)}৳"
+        binding?.rent?.text = DigitConverter.toBanglaDigit(myData?.rent)
+        binding?.water?.text = DigitConverter.toBanglaDigit(myData?.water)
+        binding?.gas?.text = DigitConverter.toBanglaDigit(myData?.gas)
+        binding?.electricity?.text = DigitConverter.toBanglaDigit(myData?.electricity)
+        binding?.internet?.text = DigitConverter.toBanglaDigit(myData?.internet)
+        binding?.mama?.text = DigitConverter.toBanglaDigit(myData?.mama)
+        binding?.khala?.text = DigitConverter.toBanglaDigit(myData?.khala)
+        binding?.extra?.text = DigitConverter.toBanglaDigit(myData?.extra)
+        binding?.serviceCharge?.text = DigitConverter.toBanglaDigit(myData?.serviceCharge)
+        binding?.meal?.text = DigitConverter.toBanglaDigit(myData?.meal)
+        binding?.others?.text = DigitConverter.toBanglaDigit(myData?.others)
+        binding?.garbege?.text = DigitConverter.toBanglaDigit(myData?.garbage)
+
+        binding?.progressBar?.visibility = View.GONE
+        binding?.detailsLayout?.visibility = View.VISIBLE
+        binding?.takaIconText?.visibility = View.VISIBLE
     }
 
 
