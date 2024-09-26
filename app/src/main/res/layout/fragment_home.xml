@@ -12,7 +12,7 @@
         android:id="@+id/marqueLL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFF0F9"
+        android:background="#E0F7FA"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,7 +23,7 @@
             android:id="@+id/linearLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#AC016D"
+            android:background="@color/colorAccent"
             android:orientation="horizontal"
             android:paddingHorizontal="6dp"
             android:paddingVertical="9dp"
@@ -59,12 +59,12 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/linearLayout"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="" />
+            tools:text="Test Notice" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#AC016D"
+            android:background="@color/colorAccent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -97,7 +97,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.5" />
+                app:layout_constraintGuide_percent="0.3" />
 
             <ImageView
                 android:id="@+id/profileImageView"
@@ -162,6 +162,7 @@
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
+                        android:background="@color/background"
                         android:layout_height="match_parent">
 
                         <ImageView
@@ -205,6 +206,7 @@
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
+                        android:background="@color/background"
                         android:layout_height="match_parent">
 
                         <ImageView
@@ -260,6 +262,7 @@
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
+                        android:background="@color/background"
                         android:layout_height="match_parent">
 
                         <ImageView
@@ -301,6 +304,7 @@
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
+                        android:background="@color/background"
                         android:layout_height="match_parent">
 
                         <ImageView
@@ -355,6 +359,7 @@
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
+                        android:background="@color/background"
                         android:layout_height="match_parent">
 
                         <ImageView
@@ -397,6 +402,7 @@
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
+                        android:background="@color/background"
                         android:layout_height="match_parent">
 
                         <ImageView

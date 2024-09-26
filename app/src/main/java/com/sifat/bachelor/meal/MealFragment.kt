@@ -9,7 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.GridLayout
 import android.widget.Toast
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
@@ -17,6 +19,7 @@ import com.sifat.bachelor.CustomSpinnerAdapter
 import com.sifat.bachelor.R
 import com.sifat.bachelor.SessionManager
 import com.sifat.bachelor.databinding.FragmentMealBinding
+import com.sifat.bachelor.getCurrentDate
 import com.sifat.bachelor.getCurrentMonth
 import com.sifat.bachelor.toast
 import java.text.ParseException
@@ -36,6 +39,7 @@ class MealFragment : Fragment() {
     var selectedDinnerCount = ""
 
     private  var dataAdapter: MealRentAdapter = MealRentAdapter()
+    private  var countDataAdapter: MealCountAdapter = MealCountAdapter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return FragmentMealBinding.inflate(inflater, container, false).also {
@@ -59,7 +63,12 @@ class MealFragment : Fragment() {
         }
 
         binding?.btnShowMeals?.setOnClickListener {
+            binding?.countLayout?.visibility = View.GONE
             onShowMealsButtonClick()
+        }
+
+        binding?.btnMealCount?.setOnClickListener {
+            onShowMealsCountButtonClick()
         }
     }
 
@@ -69,6 +78,13 @@ class MealFragment : Fragment() {
                 setHasFixedSize(true)
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter = dataAdapter
+            }
+        }
+        binding?.recycleViewMealCount?.let { view ->
+            with(view) {
+                setHasFixedSize(true)
+                layoutManager = GridLayoutManager(requireContext(), 2)
+                adapter = countDataAdapter
             }
         }
     }
@@ -218,13 +234,12 @@ class MealFragment : Fragment() {
 
     private fun onShowMealsButtonClick() {
         val mobileNumber = SessionManager.userId
-        val currentMonth = getCurrentMonth() // Get the current month (e.g., "September")
-        val selectedDate = binding?.datePicker?.text.toString().trim() // Get the selected date (e.g., "23 Sep")
+        val currentMonth = getCurrentMonth()
 
         if (mobileNumber.isNotEmpty()) {
-            fetchMealData(currentMonth, mobileNumber) { meals -> // Changed parameter to meals
+            fetchMealData(currentMonth, mobileNumber) { meals ->
                 if (meals != null && meals.isNotEmpty()) {
-                    // Handle the retrieved meal data
+                    binding?.recycleView?.visibility = View.VISIBLE
                     binding?.titleLayout?.visibility = View.VISIBLE
                     binding?.totalMeal?.text =  "Total Meal : ${meals.sumOf { it.lunch + it.dinner }}"
                     dataAdapter.initLoad(meals)
@@ -235,18 +250,34 @@ class MealFragment : Fragment() {
             }
         }
     }
+    private fun onShowMealsCountButtonClick() {
+        val currentMonth = getCurrentMonth()
+
+        fetchMealCountData(currentMonth) { meal ->
+                if (!meal.isNullOrEmpty()) {
+                    binding?.recycleView?.visibility = View.GONE
+                    binding?.titleLayout?.visibility = View.GONE
+                    binding?.recycleViewMealCount?.visibility = View.VISIBLE
+                    binding?.countLayout?.visibility = View.VISIBLE
+                    binding?.totalMealCount?.text =  "${meal.sumOf { it.lunch + it.dinner }}"
+                    countDataAdapter.initLoad(meal)
+
+                }else{
+                    Toast.makeText(context, "No meal data found", Toast.LENGTH_SHORT).show()
+                }
+        }
+
+
+    }
 
     private fun fetchMealData(currentMonth: String, mobileNumber: String, callback: (List<Meal>?) -> Unit) {
-        // Reference to the meals document for the current month
         val mealsRef = FirebaseFirestore.getInstance()
             .collection("mealsRecords")
-            .document(currentMonth) // Current month (e.g., "September")
+            .document(currentMonth)
 
-        // Fetching the document for the current month
         mealsRef.get().addOnSuccessListener { documentSnapshot ->
             if (documentSnapshot.exists()) {
                 val meals = mutableListOf<Meal>()
-                // Loop through the keys (which are the document IDs)
                 for (key in documentSnapshot.data?.keys ?: emptyList()) {
                     val mealData = documentSnapshot.get(key) as? Map<String, Any>
                     if (mealData != null && mealData["mobileNumber"] == mobileNumber) {
@@ -262,15 +293,51 @@ class MealFragment : Fragment() {
                     }
                 }
                 meals.sortBy { it.date }
-                callback(if (meals.isNotEmpty()) meals else null) // Return meals or null
+                callback(if (meals.isNotEmpty()) meals else null)
             } else {
-                callback(null) // No data found for the current month
+                callback(null)
             }
         }.addOnFailureListener { e ->
             Toast.makeText(context, "Failed to retrieve meal data: ${e.message}", Toast.LENGTH_SHORT).show()
-            callback(null) // Return null on failure
+            callback(null)
         }
     }
+
+    private fun fetchMealCountData(currentMonth: String, callback: (List<Meal>?) -> Unit) {
+        val currentDate = getCurrentDate()
+
+        val mealsRef = FirebaseFirestore.getInstance()
+            .collection("mealsRecords")
+            .document(currentMonth)
+
+        mealsRef.get().addOnSuccessListener { documentSnapshot ->
+            if (documentSnapshot.exists()) {
+                val meals = mutableListOf<Meal>()
+                for (key in documentSnapshot.data?.keys ?: emptyList()) {
+                    val mealData = documentSnapshot.get(key) as? Map<String, Any>
+                    if (mealData != null && mealData["date"] == currentDate) {
+                        meals.add(
+                            Meal(
+                                date = mealData["date"] as? String ?: "",
+                                lunch = (mealData["lunch"] as? Long)?.toInt() ?: 0,
+                                dinner = (mealData["dinner"] as? Long)?.toInt() ?: 0,
+                                userName = mealData["userName"] as? String ?: "",
+                                mobileNumber = mealData["mobileNumber"] as? String ?: ""
+                            )
+                        )
+                    }
+                }
+                meals.sortBy { it.date }
+                callback(if (meals.isNotEmpty()) meals else null)
+            } else {
+                callback(null)
+            }
+        }.addOnFailureListener { e ->
+            Toast.makeText(context, "Failed to retrieve meal data: ${e.message}", Toast.LENGTH_SHORT).show()
+            callback(null)
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

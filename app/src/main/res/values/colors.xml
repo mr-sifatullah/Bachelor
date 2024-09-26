@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">#FF018786</color>
-    <color name="colorPrimaryDark">#322E7F</color>
-    <color name="colorAccent">#E86324</color>
+    <color name="colorPrimary">#0097A7</color>
+    <color name="colorPrimaryDark">#00838F</color>
+    <color name="colorAccent">#00838F</color>
 
     <color name="blue_700">#FF1976D2</color>
     <color name="blue_500">#FF2196F3</color>
@@ -44,7 +44,7 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="primary">#6A7CFF</color>
-    <color name="background">#F7F7FA</color>
+    <color name="background">#E0F7FA</color>
     <color name="card_background">#FFFFFF</color>
     <color name="colorText_primary">#565B65</color>
     <color name="colorText_secondary">#9B9A9D</color>

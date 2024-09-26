@@ -3,13 +3,11 @@ package com.sifat.bachelor
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
@@ -24,14 +22,21 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-
 
 fun getCurrentMonth(): String {
     val dateFormat = SimpleDateFormat("MMMM", Locale.getDefault())
     return dateFormat.format(Date())
 }
+
+fun getCurrentDate(): String {
+    val calendar = Calendar.getInstance()
+    val dateFormat = SimpleDateFormat("dd MMM", Locale.getDefault()) // Format as "26 Sep"
+    return dateFormat.format(calendar.time)
+}
+
 
 fun Fragment.hideKeyboard() {
     view?.let { activity?.hideKeyboard(it) }

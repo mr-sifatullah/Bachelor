@@ -13,6 +13,7 @@ import com.google.firebase.firestore.SetOptions
 import com.sifat.bachelor.SessionManager
 import com.sifat.bachelor.databinding.FragmentBazarCostsBinding
 import com.sifat.bachelor.getCurrentMonth
+import com.sifat.bachelor.hideKeyboard
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -44,9 +45,11 @@ class BazarCostsFragment : Fragment() {
         }
 
         binding?.btnRecordBazar?.setOnClickListener {
+            hideKeyboard()
             recordBazar()
         }
         binding?.btnShowBazar?.setOnClickListener {
+            hideKeyboard()
             loadBazarRecords()
         }
     }

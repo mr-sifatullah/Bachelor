@@ -123,15 +123,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
-            android:text="Record Meal"/>
+            android:text="Save"/>
 
         <Button
             android:id="@+id/btnShowMeals"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:text="Show Meals"/>
+            android:text="Show"/>
 
+        <Button
+            android:id="@+id/btnMealCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="Count"/>
 
     </LinearLayout>
 
@@ -204,8 +210,67 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleLayout"
 
+        android:visibility="gone"
+        tools:visibility="visible"
         tools:itemCount="2"
         tools:listitem="@layout/item_view_meal" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/countLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/background"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleLayout">
+
+        <TextView
+            android:id="@+id/totalMealCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            tools:text="1"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="45sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            tools:text="(1 Sep)"
+            android:textColor="@color/black_80"
+            android:textSize="12dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/totalMealCount" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycleViewMealCount"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:layout_marginHorizontal="16dp"
+            android:overScrollMode="never"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="120dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/month"
+
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:itemCount="2"
+            tools:listitem="@layout/item_view_meal_count" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <TextView

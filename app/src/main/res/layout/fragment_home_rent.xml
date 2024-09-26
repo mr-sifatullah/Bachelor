@@ -4,19 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_gradient_main"
+    android:background="@color/background"
     android:clickable="true"
     android:focusable="true">
-
-    <LinearLayout
-        android:id="@+id/topLayout"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:orientation="horizontal"
-        android:background="@drawable/bg_curve_shape"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/totalAmount"
@@ -24,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
         tools:text="3250"
-        android:textColor="@color/home_rent_text_color"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="45sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,10 +26,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="৳"
-        android:textColor="@color/home_rent_text_color"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="25sp"
         android:textStyle="bold"
         android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintStart_toEndOf="@+id/totalAmount"
         app:layout_constraintTop_toTopOf="@id/totalAmount" />
 
@@ -69,6 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
+            tools:visibility="visible"
             app:layout_constraintTop_toBottomOf="@+id/topLayout">
 
             <LinearLayout
