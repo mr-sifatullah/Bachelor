@@ -24,13 +24,13 @@
         android:paddingVertical="8dp">
 
         <TextView
-            android:id="@+id/count"
+            android:id="@+id/dinnerCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/home_rent_text_color"
             android:textSize="24sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/dinnerCount"
+            app:layout_constraintEnd_toStartOf="@+id/count"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:text="0" />
@@ -43,10 +43,10 @@
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/count"
             app:layout_constraintTop_toTopOf="@+id/count"
-            android:text="L" />
+            android:text="D" />
 
         <TextView
-            android:id="@+id/dinnerCount"
+            android:id="@+id/count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -54,7 +54,7 @@
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/count"
+            app:layout_constraintStart_toEndOf="@+id/dinnerCount"
             app:layout_constraintTop_toTopOf="parent"
             android:text="0" />
 
@@ -66,7 +66,7 @@
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/dinnerCount"
             app:layout_constraintTop_toTopOf="@+id/dinnerCount"
-            android:text="D" />
+            android:text="L" />
 
         <TextView
             android:id="@+id/name"

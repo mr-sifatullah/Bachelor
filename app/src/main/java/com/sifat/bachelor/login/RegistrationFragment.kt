@@ -13,6 +13,7 @@ import com.sifat.bachelor.toast
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
+import com.sifat.bachelor.R
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -80,6 +81,10 @@ class RegistrationFragment : Fragment() {
 
         binding.registerBtn.setOnClickListener {
             onRegisterButtonClick()
+        }
+        binding?.login?.setOnClickListener {
+            hideKeyboard()
+            findNavController().navigate(R.id.nav_login)
         }
     }
 }
