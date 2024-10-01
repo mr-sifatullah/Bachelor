@@ -1,18 +1,20 @@
 {
-  "version": 2,
+  "version": 3,
   "artifactType": {
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.example.bachelor",
+  "applicationId": "com.sifat.bachelor",
   "variantName": "debug",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
+      "attributes": [],
       "versionCode": 1,
-      "versionName": "1.0",
-      "outputFile": "Bachelor_debug_v1.0.apk"
+      "versionName": "1",
+      "outputFile": "Bachelor_debug_v1.apk"
     }
-  ]
+  ],
+  "elementType": "File"
 }

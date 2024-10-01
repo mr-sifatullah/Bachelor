@@ -16,6 +16,7 @@ import com.sifat.bachelor.api.model.Message
 import com.sifat.bachelor.api.model.NotificationData
 import com.sifat.bachelor.api.model.Notifications
 import com.sifat.bachelor.databinding.FragmentChatBinding
+import com.sifat.bachelor.hideKeyboard
 import com.sifat.bachelor.home.HomeViewModel
 import com.sifat.bachelor.toast
 import org.koin.android.ext.android.inject
@@ -57,11 +58,17 @@ class ChatFragment : Fragment() {
         binding?.btnSend?.setOnClickListener {
             val message = binding?.writeYourMsgEt?.text.toString()
             if (message.isNotEmpty()) {
+                hideKeyboard()
                 sendMessage(message)
                 binding?.writeYourMsgEt?.text?.clear()
+                binding?.recyclerViewChat?.smoothScrollToPosition(messageList.size - 1)
             }else{
                 context?.toast("Please Type Something.")
             }
+        }
+
+        binding?.writeYourMsgEt?.setOnFocusChangeListener { _, hasFocus ->
+            binding?.recyclerViewChat?.smoothScrollToPosition(messageList.size - 1)
         }
     }
 
@@ -79,7 +86,8 @@ class ChatFragment : Fragment() {
                     messageList.add(chatMessage)
                 }
             }
-            chatAdapter.notifyDataSetChanged() // Update the RecyclerView
+            chatAdapter.notifyDataSetChanged()
+            binding?.recyclerViewChat?.smoothScrollToPosition(messageList.size - 1)
         }
     }
 

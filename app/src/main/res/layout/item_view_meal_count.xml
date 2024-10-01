@@ -41,8 +41,8 @@
             android:textColor="@color/home_rent_text_color"
             android:textSize="12sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/count"
-            app:layout_constraintTop_toTopOf="@+id/count"
+            app:layout_constraintStart_toEndOf="@+id/dinnerCount"
+            app:layout_constraintTop_toTopOf="@+id/dinnerCount"
             android:text="D" />
 
         <TextView
@@ -64,8 +64,8 @@
             android:textColor="@color/home_rent_text_color"
             android:textSize="12sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/dinnerCount"
-            app:layout_constraintTop_toTopOf="@+id/dinnerCount"
+            app:layout_constraintStart_toEndOf="@+id/count"
+            app:layout_constraintTop_toTopOf="@+id/count"
             android:text="L" />
 
         <TextView
